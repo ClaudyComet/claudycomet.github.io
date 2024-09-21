@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Δ and ε Proofs Practice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #2C2C2C;
+            color: #E0E0E0;
+            font-size: 18px;
+        }
+        .container {
+            text-align: center;
+            background-color: #4A4A4A;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            max-width: 90%;
+            width: 600px;
+        }
+        h1 {
+            color: #FFFFFF;
+            font-size: 2.5em;
+            margin-bottom: 1em;
+        }
+        h2 {
+            color: #BDBDBD;
+            font-size: 2em;
+            margin-bottom: 0.5em;
+        }
+        button {
+            margin: 15px;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #757575;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            background-color: #9E9E9E;
+            transform: scale(1.05);
+        }
+        #problem {
+            margin-top: 30px;
+            font-size: 24px;
+            background-color: #2C2C2C;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        math {
+            font-size: 1.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main">
+        <h1>Δ and ε Proofs Practice</h1>
+        <button onclick="showProblemType('linear')">Limits of Linear Equations</button>
+        <button onclick="showProblemType('rational')">Limits of Rational Linear Equations</button>
+    </div>
+
+    <div class="container" id="problemContainer" style="display:none;">
+        <h2 id="problemType"></h2>
+        <button onclick="generateProblem()">Generate Problem</button>
+        <div id="problem"></div>
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        let currentType = '';
+
+        function showProblemType(type) {
+            currentType = type;
+            document.getElementById('main').style.display = 'none';
+            document.getElementById('problemContainer').style.display = 'block';
+            document.getElementById('problemType').textContent = type === 'linear' ? 'Limits of Linear Equations' : 'Limits of Rational Linear Equations';
+            document.getElementById('problem').innerHTML = '';
+        }
+
+        function goBack() {
+            document.getElementById('main').style.display = 'block';
+            document.getElementById('problemContainer').style.display = 'none';
+        }
+
+        function generateProblem() {
+            let a, b, c, d, problemMathML, answerMathML;
+
+            if (currentType === 'linear') {
+                a = Math.floor(Math.random() * 41) - 20; // -20 to 20
+                b = Math.floor(Math.random() * 41) - 20; // -20 to 20
+                c = Math.floor(Math.random() * 11) - 5; // -5 to 5
+                problemMathML = `
+                    <math>
+                        <munder>
+                            <mi>lim</mi>
+                            <mrow>
+                                <mi>x</mi>
+                                <mo>→</mo>
+                                <mn>${c}</mn>
+                            </mrow>
+                        </munder>
+                        <mrow>
+                            <mo>(</mo>
+                            <mn>${a}</mn>
+                            <mi>x</mi>
+                            <mo>${b >= 0 ? '+' : '-'}</mo>
+                            <mn>${Math.abs(b)}</mn>
+                            <mo>)</mo>
+                        </mrow>
+                    </math>
+                `;
+                answerMathML = `<math><mn>${a * c + b}</mn></math>`;
+            } else {
+                if (Math.random() < 0.9) { // 90% chance of integer solution
+                    const result = Math.floor(Math.random() * 21) - 10; // -10 to 10
+                    a = result;
+                    d = 1;
+                } else {
+                    a = Math.floor(Math.random() * 21) - 10; // -10 to 10
+                    d = Math.floor(Math.random() * 10) + 1; // 1 to 10
+                    while (a % d === 0) { // Ensure it's not reducible to an integer
+                        d = Math.floor(Math.random() * 10) + 1;
+                    }
+                }
+                b = Math.floor(Math.random() * 41) - 20; // -20 to 20
+                problemMathML = `
+                    <math>
+                        <munder>
+                            <mi>lim</mi>
+                            <mrow>
+                                <mi>x</mi>
+                                <mo>→</mo>
+                                <mi>∞</mi>
+                            </mrow>
+                        </munder>
+                        <mfrac>
+                            <mrow>
+                                <mn>${a}</mn>
+                                <mi>x</mi>
+                                <mo>${b >= 0 ? '+' : '-'}</mo>
+                                <mn>${Math.abs(b)}</mn>
+                            </mrow>
+                            <mrow>
+                                <mn>${d}</mn>
+                                <mi>x</mi>
+                                <mo>${b >= 0 ? '+' : '-'}</mo>
+                                <mn>${Math.abs(b)}</mn>
+                            </mrow>
+                        </mfrac>
+                    </math>
+                `;
+                if (d === 1) {
+                    answerMathML = `<math><mn>${a}</mn></math>`;
+                } else {
+                    answerMathML = `<math><mfrac><mn>${a}</mn><mn>${d}</mn></mfrac></math>`;
+                }
+            }
+
+            document.getElementById('problem').innerHTML = `${problemMathML} = ${answerMathML}`;
+        }
+    </script>
+</body>
+</html>
